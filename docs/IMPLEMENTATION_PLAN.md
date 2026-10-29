@@ -65,7 +65,7 @@ src/
 | C2 | Types layer | Foundation | CORE | C1 | 1 სთ |
 | C3 | Utils + API layer | Foundation | CORE | C2 | 2 სთ |
 | C4 | Routing + Layout + Header + 404 | App Shell | CORE | C1 | 3 სთ |
-| C5 | Error Boundary | App Shell | CORE | C4 | 1 სთ |
+| C5 | Error Boundary | App Shell | FULL (PRD დანართი A) | C4 | 1 სთ |
 | C6 | AuthContext + Login page | Auth | CORE | C4 | 3 სთ |
 | C7 | ProtectedRoute (Checkout guard) | Auth | CORE | C6 | 1 სთ |
 | C8 | CartContext (state + localStorage) | Cart state | CORE | C2, C3 | 3 სთ |
@@ -144,8 +144,8 @@ src/
 - **AC:** 6-ვე მარშრუტი იხსნება; უცნობი URL → NotFound; active ბმული გამოკვეთილია.
 - **Commit:** `feat(routing): add layout, header, 404 and scroll restoration`
 
-#### C5 — Error Boundary
-- **Goal:** render-ის შეცდომა მთელ აპს არ "აქრობს" (O2 — CORE).
+#### C5 — Error Boundary (FULL, PRD დანართი A; გაკეთებულია ადრე, CORE-ზე გავლენის გარეშე)
+- **Goal:** render-ის შეცდომა მთელ აპს არ "აქრობს". შენიშვნა: CORE-ში სავალდებულოა მხოლოდ API-ის Error მდგომარეობა (C9/C11); Error Boundary FULL-ია.
 - **Scope:** `components/ErrorBoundary.tsx` — class component, `static getDerivedStateFromError` + `componentDidCatch`; fallback "Something went wrong." + "Reload" ღილაკი. ახვევს `<Outlet />`-ს Layout-ში.
 - **AC:** კომპონენტში ხელით `throw` → fallback ჩანს, Header რჩება.
 - **Commit:** `feat: add error boundary`
