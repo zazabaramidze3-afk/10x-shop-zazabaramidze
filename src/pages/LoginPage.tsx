@@ -4,11 +4,15 @@ import Button from '../components/Button';
 import type { FormErrors } from '../types/form'
 import type { LoginFormValues } from '../types/user'
 import { validateLogin } from '../utils/validation'
+import { useNavigate } from 'react-router-dom'
+import useAuth  from '../hooks/useAuth'
 
 const LoginPage = () => {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [errors, setErrors] = useState<FormErrors<LoginFormValues>>({})
+    const { login } = useAuth()
+    const navigate = useNavigate()
 
     const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setUsername(event.target.value)
@@ -27,6 +31,9 @@ const LoginPage = () => {
         if (Object.keys(validationErrors).length > 0) {
             return
         }
+
+        login(username)
+        navigate('/')
     }
     
     return (
