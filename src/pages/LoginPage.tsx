@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import type { ChangeEvent, SubmitEvent } from 'react';
 import Button from '../components/Button';
+import type { FormErrors } from '../types/form'
+import type { LoginFormValues } from '../types/user'
+import { validateLogin } from '../utils/validation'
 
 const LoginPage = () => {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const [errors, setErrors] = useState<FormErrors<LoginFormValues>>({})
 
     const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setUsername(event.target.value)
@@ -16,9 +20,15 @@ const LoginPage = () => {
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>): void => {
         event.preventDefault()
-        console.log('Login attempt:', { username })
-    }
 
+        const validationErrors = validateLogin({ username, password })
+        setErrors(validationErrors)
+
+        if (Object.keys(validationErrors).length > 0) {
+            return
+        }
+    }
+    
     return (
         <div className='mx-auto max-w-sm space-y-6'>
             <h1 className='text-2xl font-semibold'>Login</h1>
@@ -35,6 +45,7 @@ const LoginPage = () => {
                         onChange={handleUsernameChange}
                         className='w-full rounded-xl border border-neutral-300 px-4 py-2.5 transition duration-200 focus:border-neutral-900 focus:outline-none'
                     />
+                    {errors.username && <p className='text-sm text-red-600'>{errors.username}</p>}
                 </div>
 
                 <div className='space-y-1'>
@@ -48,6 +59,7 @@ const LoginPage = () => {
                         onChange={handlePasswordChange}
                         className='w-full rounded-xl border border-neutral-300 px-4 py-2.5 transition duration-200 focus:border-neutral-900 focus:outline-none'
                     />
+                    {errors.password && <p className='text-sm text-red-600'>{errors.password}</p>}
                 </div>
 
                 <Button type='submit' className='w-full'>
