@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.tsx'
 import ErrorBoundary from './components/ErrorBoundary.tsx'
 import AuthProvider from './context/AuthProvider.tsx'
+import CartProvider from './context/CartProvider'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -12,7 +13,9 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <ErrorBoundary>
         <AuthProvider>
-          <App />
+          <CartProvider>
+            <App />
+          </CartProvider>
         </AuthProvider>
       </ErrorBoundary>
     </BrowserRouter>
