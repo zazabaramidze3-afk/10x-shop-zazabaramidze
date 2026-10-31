@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import Button from './Button'
+import useCart from '../hooks/useCart'
 import type { Product } from '../types/product'
 import { discountedPrice, formatPrice } from '../utils/format'
 
@@ -7,7 +9,21 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+    const { addItem } = useCart()
     const finalPrice = discountedPrice(product.price, product.discountPercentage)
+    const isOutOfStock = product.stock < 1
+
+    const handleAddToCart = (): void => {
+        addItem({
+            productId: product.id,
+            title: product.title,
+            thumbnail: product.thumbnail,
+            price: product.price,
+            discountPercentage: product.discountPercentage,
+            stock: product.stock,
+            quantity: 1,
+        })
+    }
 
     return (
         <article className='flex flex-col overflow-hidden rounded-xl border border-neutral-200 transition duration-200 hover:border-neutral-900'>
@@ -31,6 +47,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         {formatPrice(product.price)}
                     </span>
                 </div>
+
+                <Button className='mt-auto' onClick={handleAddToCart} disabled={isOutOfStock}>
+                    {isOutOfStock ? 'Out of stock' : 'Add to cart'}
+                </Button>
             </div>
         </article>
     )
