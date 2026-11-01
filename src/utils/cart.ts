@@ -26,3 +26,7 @@ export function createCartItem(product: Product): CartItem {
         quantity: 1,
     }
 }
+
+export function getQuantityInCart(items: CartItem[], productId: number): number {
+    return items.find((item) => item.productId === productId)?.quantity ?? 0
+}

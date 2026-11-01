@@ -7,14 +7,14 @@ import Button from '../components/Button'
 import useCart from '../hooks/useCart'
 import NotFoundPage from './NotFoundPage'
 import type { Product } from '../types/product'
-import { createCartItem } from '../utils/cart'
+import { createCartItem, getQuantityInCart } from '../utils/cart'
 import { discountedPrice, formatPrice } from '../utils/format'
 
 const ProductPage = () => {
     const { id } = useParams<{ id: string }>()
     const productId = Number(id)
 
-    const { addItem } = useCart()
+    const { items, addItem } = useCart()
     const [product, setProduct] = useState<Product | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isNotFound, setIsNotFound] = useState<boolean>(false)
@@ -61,7 +61,8 @@ const ProductPage = () => {
     }
 
     const finalPrice = discountedPrice(product.price, product.discountPercentage)
-    const isOutOfStock = product.stock < 1
+    const remainingStock = product.stock - getQuantityInCart(items, product.id)
+    const isOutOfStock = remainingStock < 1
 
     return (
         <div className='space-y-6'>
@@ -90,7 +91,7 @@ const ProductPage = () => {
                     </div>
 
                     <p className='text-sm text-neutral-600'>
-                        Rating: {product.rating} / 5 · {isOutOfStock ? 'Out of stock' : `${product.stock} in stock`}
+                        Rating: {product.rating} / 5 · {isOutOfStock ? 'Out of stock' : `${remainingStock} in stock`}
                     </p>
 
                     <Button
