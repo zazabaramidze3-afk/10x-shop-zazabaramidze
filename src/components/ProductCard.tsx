@@ -3,6 +3,7 @@ import Button from './Button'
 import useCart from '../hooks/useCart'
 import type { Product } from '../types/product'
 import { discountedPrice, formatPrice } from '../utils/format'
+import { createCartItem } from '../utils/cart'
 
 interface ProductCardProps {
     product: Product
@@ -14,15 +15,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     const isOutOfStock = product.stock < 1
 
     const handleAddToCart = (): void => {
-        addItem({
-            productId: product.id,
-            title: product.title,
-            thumbnail: product.thumbnail,
-            price: product.price,
-            discountPercentage: product.discountPercentage,
-            stock: product.stock,
-            quantity: 1,
-        })
+        addItem(createCartItem(product))
     }
 
     return (
