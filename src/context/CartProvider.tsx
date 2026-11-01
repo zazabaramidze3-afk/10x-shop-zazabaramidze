@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { CartContext } from './CartContext'
 import type { CartContextValue } from './CartContext'
@@ -8,9 +8,29 @@ interface CartProviderProps {
     children: ReactNode
 }
 
-const CartProvider = ({ children }: CartProviderProps) => {
-    const [items, setItems] = useState<CartItem[]>([])
+const STORAGE_KEY = 'cart'
 
+const loadCart = (): CartItem[] => {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY)
+        if (saved === null) {
+            return []
+        }
+
+        const parsed: unknown = JSON.parse(saved)
+        return Array.isArray(parsed) ? (parsed as CartItem[]) : []
+    } catch {
+        return []
+    }
+}
+
+const CartProvider = ({ children }: CartProviderProps) => {
+    const [items, setItems] = useState<CartItem[]>(loadCart)
+    
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+    }, [items])
+    
     const addItem = (newItem: CartItem): void => {
         setItems((prevItems) => {
             const existing = prevItems.find((item) => item.productId === newItem.productId)
