@@ -12,7 +12,8 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
     const { items, addItem } = useCart()
     const finalPrice = discountedPrice(product.price, product.discountPercentage)
-    const isOutOfStock = product.stock - getQuantityInCart(items, product.id) < 1
+    const remainingStock = product.stock - getQuantityInCart(items, product.id)
+    const isOutOfStock = remainingStock < 1
 
     const handleAddToCart = (): void => {
         addItem(createCartItem(product))
@@ -27,6 +28,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 <img
                     src={product.thumbnail}
                     alt={product.title}
+                    loading='lazy'
                     className='aspect-square w-full bg-neutral-100 object-cover'
                 />
             </Link>
@@ -40,6 +42,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         {formatPrice(product.price)}
                     </span>
                 </div>
+
+                <p className='text-sm text-neutral-600'>
+                    {isOutOfStock ? 'Out of stock' : `${remainingStock} in stock`}
+                </p>
 
                 <Button className='mt-auto' onClick={handleAddToCart} disabled={isOutOfStock}>
                     {isOutOfStock ? 'Out of stock' : 'Add to cart'}
