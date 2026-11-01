@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage'
 import ProductPage from './pages/ProductPage'
 import CartPage from './pages/CartPage'
 import ProtectedRoute from './components/ProtectedRoute'
+import CheckoutPage from './pages/CheckoutPage'
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         <Route element={<ProtectedRoute />}>
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
