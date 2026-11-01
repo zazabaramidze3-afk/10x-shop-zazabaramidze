@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import type { ChangeEvent, SubmitEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import FormField from '../components/FormField'
 import useCart from '../hooks/useCart'
 import type { FormErrors } from '../types/form'
 import type { OrderSummary, ShippingInfo } from '../types/order'
-import { getCartSubtotal } from '../utils/cart'
+import { getCartSubtotal, getLineTotal } from '../utils/cart'
+import { formatPrice } from '../utils/format'
 import { validateShipping } from '../utils/validation'
 
 const INITIAL_VALUES: ShippingInfo = {
@@ -21,6 +22,7 @@ const CheckoutPage = () => {
     const navigate = useNavigate()
     const [values, setValues] = useState<ShippingInfo>(INITIAL_VALUES)
     const [errors, setErrors] = useState<FormErrors<ShippingInfo>>({})
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = event.target
@@ -37,6 +39,8 @@ const CheckoutPage = () => {
             return
         }
 
+        setIsSubmitting(true)
+
         // შეკვეთის "ქვითარი": ვინახავთ კალათის სურათს გასუფთავებამდე
         const order: OrderSummary = {
             items,
@@ -49,20 +53,29 @@ const CheckoutPage = () => {
         navigate('/order-confirmation', { state: order })
     }
 
-    if (items.length === 0) {
-        return (
-            <div className='space-y-4'>
-                <h1 className='text-2xl font-semibold'>Your cart is empty</h1>
-                <Link to='/' className='inline-block text-sm font-medium underline transition duration-200 hover:opacity-70'>
-                    Back to catalog
-                </Link>
-            </div>
-        )
+    // ცარიელი კალათით Checkout-ს აზრი არ აქვს: ვაბრუნებთ /cart-ზე (იქ ჩანს "Your cart is empty."). isSubmitting: შეკვეთის დროს clearCart() კალათას ცარიელს ხდის და ამ დროს /cart-ზე არ გადავდივართ
+    if (items.length === 0 && !isSubmitting) {
+        return <Navigate to='/cart' replace />
     }
 
     return (
         <div className='mx-auto max-w-lg space-y-6'>
             <h1 className='text-2xl font-semibold'>Checkout</h1>
+
+            <section aria-label='Order summary' className='space-y-3 rounded-xl border border-neutral-200 p-4'>
+                <h2 className='font-medium'>Order summary</h2>
+                <ul className='space-y-2'>
+                    {items.map((item) => (
+                        <li key={item.productId} className='flex justify-between gap-4 text-sm'>
+                            <span>{item.title} × {item.quantity}</span>
+                            <span>{formatPrice(getLineTotal(item))}</span>
+                        </li>
+                    ))}
+                </ul>
+                <p className='border-t border-neutral-200 pt-3 text-lg font-semibold'>
+                    Total: {formatPrice(getCartSubtotal(items))}
+                </p>
+            </section>
 
             <form onSubmit={handleSubmit} noValidate className='space-y-4'>
                 <FormField
@@ -99,8 +112,8 @@ const CheckoutPage = () => {
                     error={errors.city}
                 />
 
-                <Button type='submit' className='w-full'>
-                    Place order
+                <Button type='submit' className='w-full' disabled={isSubmitting}>
+                    {isSubmitting ? 'Placing order...' : 'Place order'}
                 </Button>
             </form>
         </div>

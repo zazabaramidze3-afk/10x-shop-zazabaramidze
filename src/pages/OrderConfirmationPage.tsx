@@ -15,7 +15,7 @@ const OrderConfirmationPage = () => {
     return (
         <div className='mx-auto max-w-lg space-y-6'>
             <div className='space-y-1'>
-                <h1 className='text-2xl font-semibold'>Thank you for your order!</h1>
+                <h1 className='text-2xl font-semibold'>Thank you! Your order has been placed.</h1>
                 <p className='text-sm text-neutral-600'>
                     Placed on {new Date(order.placedAt).toLocaleString()}
                 </p>
