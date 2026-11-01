@@ -4,6 +4,8 @@ import NotFoundPage from './pages/NotFoundPage'
 import BaseLayout from './layouts/BaseLayout'
 import LoginPage from './pages/LoginPage'
 import ProductPage from './pages/ProductPage'
+import CartPage from './pages/CartPage'
+import ProtectedRoute from './components/ProtectedRoute'
 
 
 function App() {
@@ -13,6 +15,9 @@ function App() {
         <Route path='/products/:id' element={<ProductPage />} />
         <Route path="/" element={<CatalogPage />} />
         <Route path="/login" element={<LoginPage/>} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/cart" element={<CartPage />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
