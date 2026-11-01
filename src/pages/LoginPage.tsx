@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import type { FormErrors } from '../types/form'
 import type { LoginFormValues } from '../types/user'
 import { validateLogin } from '../utils/validation'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import useAuth  from '../hooks/useAuth'
 
 interface LoginLocationState {
@@ -79,6 +79,10 @@ const LoginPage = () => {
                     Login
                 </Button>
             </form>
+
+            <Link to='/' className='inline-block text-sm font-medium underline transition duration-200 hover:opacity-70'>
+                ← Back to catalog
+            </Link>
         </div>
     )
 }

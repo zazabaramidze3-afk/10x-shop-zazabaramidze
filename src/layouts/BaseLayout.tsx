@@ -4,12 +4,15 @@ import ScrollToTop from '../components/ScrollToTop'
 
 const BaseLayout = () => {
   return (
-    <div className='min-h-screen bg-white text-neutral-900'>
-        <ScrollToTop />
-        <Header />
-        <main className='mx-auto max-w-6xl px-4 py-8'>
-            <Outlet />        
-        </main>        
+    <div className='flex min-h-screen flex-col bg-white text-neutral-900'>
+      <ScrollToTop />
+      <Header />
+      <main className='mx-auto w-full max-w-6xl flex-1 px-4 py-8'>
+        <Outlet />
+      </main>
+      <footer className='border-t border-neutral-200 py-6 text-center text-sm text-neutral-600'>
+        © 2026 10X Shop
+      </footer>
     </div>
   )
 }

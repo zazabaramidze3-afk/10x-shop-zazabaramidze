@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import Button from './Button'
 import useAuth from '../hooks/useAuth'
 import useCart from '../hooks/useCart'
@@ -7,6 +7,10 @@ import { getCartCount } from '../utils/cart'
 
 const linkStyles =
   'whitespace-nowrap text-sm font-medium transition duration-200 hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-900'
+
+// NavLink-ს className-ში isActive გადმოეცემა: მიმდინარე გვერდის ბმული გამოიკვეთება
+const getNavLinkStyles = ({ isActive }: { isActive: boolean }): string =>
+  `${linkStyles} ${isActive ? 'underline underline-offset-4' : ''}`
 
 const Header = () => {
   const { user, logout } = useAuth()
@@ -28,9 +32,13 @@ const Header = () => {
   // ერთი და იგივე ბმულები ორ ადგილას გამოიყენება: კომპიუტერის ზოლში და მობილურის მენიუში
   const navLinks = (
     <>
-      <Link to='/cart' onClick={closeMenu} className={linkStyles}>
-        Cart ({cartCount})
-      </Link>
+      <NavLink to='/' end onClick={closeMenu} className={getNavLinkStyles}>
+        Catalog
+      </NavLink>
+
+      <NavLink to='/cart' onClick={closeMenu} className={getNavLinkStyles}>
+        Cart{cartCount > 0 ? ` (${cartCount})` : ''}
+      </NavLink>
 
       {user.isLoggedIn ? (
         <>
@@ -40,9 +48,9 @@ const Header = () => {
           </Button>
         </>
       ) : (
-        <Link to='/login' onClick={closeMenu} className={linkStyles}>
+        <NavLink to='/login' onClick={closeMenu} className={getNavLinkStyles}>
           Login
-        </Link>
+        </NavLink>
       )}
     </>
   )
