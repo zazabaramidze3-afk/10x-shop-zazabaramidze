@@ -7,15 +7,21 @@ import { discountedPrice, formatPrice } from '../utils/format'
 const CartPage = () => {
     const { items, removeItem, updateQuantity, clearCart } = useCart()
 
+    const handleClearCart = (): void => {
+        if (window.confirm('Clear the cart? This cannot be undone.')) {
+            clearCart()
+        }
+    }
+
     if (items.length === 0) {
         return (
             <div className='space-y-4'>
-                <h1 className='text-2xl font-semibold'>Your cart is empty</h1>
+                <h1 className='text-2xl font-semibold'>Your cart is empty.</h1>
                 <Link
                     to='/'
                     className='inline-block text-sm font-medium underline transition duration-200 hover:opacity-70'
                 >
-                    Back to catalog
+                    Browse products
                 </Link>
             </div>
         )
@@ -38,7 +44,12 @@ const CartPage = () => {
                         />
 
                         <div className='flex-1 space-y-1'>
-                            <p className='font-medium'>{item.title}</p>
+                            <Link
+                                to={`/products/${item.productId}`}
+                                className='font-medium transition duration-200 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900'
+                            >
+                                {item.title}
+                            </Link>
                             <p className='text-sm text-neutral-600'>
                                 {formatPrice(discountedPrice(item.price, item.discountPercentage))} each
                             </p>
@@ -76,14 +87,14 @@ const CartPage = () => {
                 <p className='text-xl font-semibold'>Subtotal: {formatPrice(getCartSubtotal(items))}</p>
 
                 <div className='flex gap-3'>
-                    <Button variant='secondary' onClick={clearCart}>
+                    <Button variant='secondary' onClick={handleClearCart}>
                         Clear cart
                     </Button>
                     <Link
                         to='/checkout'
                         className='rounded-xl bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition duration-200 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900'
                     >
-                        Checkout
+                        Proceed to checkout
                     </Link>
                 </div>
             </div>

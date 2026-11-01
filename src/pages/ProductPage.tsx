@@ -20,6 +20,7 @@ const ProductPage = () => {
     const [isNotFound, setIsNotFound] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const [quantity, setQuantity] = useState<number>(1)
+    const [isAdded, setIsAdded] = useState<boolean>(false)
 
     useEffect(() => {
         // /products/abc ტიპის არასწორ id-ს API-ს აღარ ვეკითხებით
@@ -64,11 +65,22 @@ const ProductPage = () => {
     const finalPrice = discountedPrice(product.price, product.discountPercentage)
     const remainingStock = product.stock - getQuantityInCart(items, product.id)
     const isOutOfStock = remainingStock < 1
+    const stockLabel = isOutOfStock
+        ? 'Out of stock'
+        : remainingStock <= 5
+          ? `Only ${remainingStock} left!`
+          : `${remainingStock} in stock`
     const selectedQuantity = Math.min(quantity, Math.max(remainingStock, 1))
 
     const handleAddToCart = (): void => {
         addItem({ ...createCartItem(product), quantity: selectedQuantity })
         setQuantity(1)
+        setIsAdded(true)
+    }
+
+    const changeQuantity = (nextQuantity: number): void => {
+        setQuantity(nextQuantity)
+        setIsAdded(false)
     }
 
     return (
@@ -98,7 +110,7 @@ const ProductPage = () => {
                     </div>
 
                     <p className='text-sm text-neutral-600'>
-                        Rating: {product.rating} / 5 · {isOutOfStock ? 'Out of stock' : `${remainingStock} in stock`}
+                        Rating: {product.rating} / 5 · {stockLabel}
                     </p>
 
                     {!isOutOfStock && (
@@ -106,7 +118,7 @@ const ProductPage = () => {
                             <Button
                                 variant='secondary'
                                 aria-label='Decrease quantity'
-                                onClick={() => setQuantity(selectedQuantity - 1)}
+                                onClick={() => changeQuantity(selectedQuantity - 1)}
                                 disabled={selectedQuantity <= 1}
                             >
                                 −
@@ -117,7 +129,7 @@ const ProductPage = () => {
                             <Button
                                 variant='secondary'
                                 aria-label='Increase quantity'
-                                onClick={() => setQuantity(selectedQuantity + 1)}
+                                onClick={() => changeQuantity(selectedQuantity + 1)}
                                 disabled={selectedQuantity >= remainingStock}
                             >
                                 +
@@ -128,6 +140,12 @@ const ProductPage = () => {
                     <Button className='w-full md:w-auto' onClick={handleAddToCart} disabled={isOutOfStock}>
                         {isOutOfStock ? 'Out of stock' : 'Add to cart'}
                     </Button>
+
+                    {isAdded && (
+                        <p role='status' className='text-sm text-green-700'>
+                            Added to cart ✓
+                        </p>
+                    )}
                 </div>
             </div>
         </div>
