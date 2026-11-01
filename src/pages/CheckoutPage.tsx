@@ -1,11 +1,12 @@
-
-// ახალი ფაილი: src/pages/CheckoutPage.tsx
 import { useState } from 'react'
 import type { ChangeEvent, SubmitEvent } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import FormField from '../components/FormField'
+import useCart from '../hooks/useCart'
 import type { FormErrors } from '../types/form'
-import type { ShippingInfo } from '../types/order'
+import type { OrderSummary, ShippingInfo } from '../types/order'
+import { getCartSubtotal } from '../utils/cart'
 import { validateShipping } from '../utils/validation'
 
 const INITIAL_VALUES: ShippingInfo = {
@@ -16,6 +17,8 @@ const INITIAL_VALUES: ShippingInfo = {
 }
 
 const CheckoutPage = () => {
+    const { items, clearCart } = useCart()
+    const navigate = useNavigate()
     const [values, setValues] = useState<ShippingInfo>(INITIAL_VALUES)
     const [errors, setErrors] = useState<FormErrors<ShippingInfo>>({})
 
@@ -34,7 +37,27 @@ const CheckoutPage = () => {
             return
         }
 
-        // შეკვეთის განთავსება შემდეგ ნაბიჯში (15c)
+        // შეკვეთის "ქვითარი": ვინახავთ კალათის სურათს გასუფთავებამდე
+        const order: OrderSummary = {
+            items,
+            shipping: values,
+            total: getCartSubtotal(items),
+            placedAt: new Date().toISOString(),
+        }
+
+        clearCart()
+        navigate('/order-confirmation', { state: order })
+    }
+
+    if (items.length === 0) {
+        return (
+            <div className='space-y-4'>
+                <h1 className='text-2xl font-semibold'>Your cart is empty</h1>
+                <Link to='/' className='inline-block text-sm font-medium underline transition duration-200 hover:opacity-70'>
+                    Back to catalog
+                </Link>
+            </div>
+        )
     }
 
     return (
