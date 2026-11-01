@@ -9,15 +9,24 @@ interface AuthProviderProps {
 }
 
 const GUEST_USER: AuthUser = { username: '', isLoggedIn: false }
+const STORAGE_KEY = 'username'
+
+// ვკითხულობთ შენახულ username-ს: თუ არის, მომხმარებელი შესულია, თუ არა, სტუმარია
+const loadUser = (): AuthUser => {
+    const username = localStorage.getItem(STORAGE_KEY)
+    return username ? { username, isLoggedIn: true } : GUEST_USER
+}
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [user, setUser] = useState<AuthUser>(GUEST_USER)
+    const [user, setUser] = useState<AuthUser>(loadUser)
 
     const login = (username: string): void => {
+        localStorage.setItem(STORAGE_KEY, username)
         setUser({ username, isLoggedIn: true })
     }
 
     const logout = (): void => {
+        localStorage.removeItem(STORAGE_KEY)
         setUser(GUEST_USER)
     }
 
