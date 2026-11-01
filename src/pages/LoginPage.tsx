@@ -4,8 +4,12 @@ import Button from '../components/Button';
 import type { FormErrors } from '../types/form'
 import type { LoginFormValues } from '../types/user'
 import { validateLogin } from '../utils/validation'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth  from '../hooks/useAuth'
+
+interface LoginLocationState {
+    from?: { pathname: string }
+}
 
 const LoginPage = () => {
     const [username, setUsername] = useState<string>('')
@@ -13,6 +17,8 @@ const LoginPage = () => {
     const [errors, setErrors] = useState<FormErrors<LoginFormValues>>({})
     const { login } = useAuth()
     const navigate = useNavigate()
+    const location = useLocation()
+    const redirectTo = (location.state as LoginLocationState | null)?.from?.pathname ?? '/'
 
     const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setUsername(event.target.value)
@@ -33,7 +39,7 @@ const LoginPage = () => {
         }
 
         login(username)
-        navigate('/')
+        navigate(redirectTo, { replace: true })
     }
     
     return (
