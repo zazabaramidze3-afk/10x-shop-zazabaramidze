@@ -9,7 +9,7 @@ interface AuthProviderProps {
 }
 
 const GUEST_USER: AuthUser = { username: '', isLoggedIn: false }
-const STORAGE_KEY = 'username'
+const STORAGE_KEY = 'shop_user'
 
 // ვკითხულობთ შენახულ username-ს: თუ არის, მომხმარებელი შესულია, თუ არა, სტუმარია
 const loadUser = (): AuthUser => {

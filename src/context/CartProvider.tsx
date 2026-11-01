@@ -8,7 +8,7 @@ interface CartProviderProps {
     children: ReactNode
 }
 
-const STORAGE_KEY = 'cart'
+const STORAGE_KEY = 'shop_cart'
 
 const loadCart = (): CartItem[] => {
     try {
