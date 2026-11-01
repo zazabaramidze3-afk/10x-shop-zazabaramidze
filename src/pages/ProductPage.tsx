@@ -19,6 +19,7 @@ const ProductPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isNotFound, setIsNotFound] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
+    const [quantity, setQuantity] = useState<number>(1)
 
     useEffect(() => {
         // /products/abc ტიპის არასწორ id-ს API-ს აღარ ვეკითხებით
@@ -63,6 +64,12 @@ const ProductPage = () => {
     const finalPrice = discountedPrice(product.price, product.discountPercentage)
     const remainingStock = product.stock - getQuantityInCart(items, product.id)
     const isOutOfStock = remainingStock < 1
+    const selectedQuantity = Math.min(quantity, Math.max(remainingStock, 1))
+
+    const handleAddToCart = (): void => {
+        addItem({ ...createCartItem(product), quantity: selectedQuantity })
+        setQuantity(1)
+    }
 
     return (
         <div className='space-y-6'>
@@ -94,11 +101,31 @@ const ProductPage = () => {
                         Rating: {product.rating} / 5 · {isOutOfStock ? 'Out of stock' : `${remainingStock} in stock`}
                     </p>
 
-                    <Button
-                        className='w-full md:w-auto'
-                        onClick={() => addItem(createCartItem(product))}
-                        disabled={isOutOfStock}
-                    >
+                    {!isOutOfStock && (
+                        <div className='flex items-center gap-3'>
+                            <Button
+                                variant='secondary'
+                                aria-label='Decrease quantity'
+                                onClick={() => setQuantity(selectedQuantity - 1)}
+                                disabled={selectedQuantity <= 1}
+                            >
+                                −
+                            </Button>
+                            <span className='w-6 text-center' aria-live='polite'>
+                                {selectedQuantity}
+                            </span>
+                            <Button
+                                variant='secondary'
+                                aria-label='Increase quantity'
+                                onClick={() => setQuantity(selectedQuantity + 1)}
+                                disabled={selectedQuantity >= remainingStock}
+                            >
+                                +
+                            </Button>
+                        </div>
+                    )}
+
+                    <Button className='w-full md:w-auto' onClick={handleAddToCart} disabled={isOutOfStock}>
                         {isOutOfStock ? 'Out of stock' : 'Add to cart'}
                     </Button>
                 </div>
