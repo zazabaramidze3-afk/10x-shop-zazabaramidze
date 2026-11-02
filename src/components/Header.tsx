@@ -112,7 +112,7 @@ const Header = () => {
         <nav
           id='mobile-menu'
           aria-label='Mobile'
-          className='flex flex-col items-start gap-4 border-t border-neutral-200 px-4 py-4 sm:hidden'
+          className='flex flex-wrap items-center gap-4 border-t border-neutral-200 px-4 py-4 sm:hidden'
         >
           {navLinks}
         </nav>
