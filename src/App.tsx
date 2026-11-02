@@ -1,28 +1,30 @@
+import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import CatalogPage from './pages/CatalogPage'
-import NotFoundPage from './pages/NotFoundPage'
 import BaseLayout from './layouts/BaseLayout'
-import LoginPage from './pages/LoginPage'
-import ProductPage from './pages/ProductPage'
-import CartPage from './pages/CartPage'
 import ProtectedRoute from './components/ProtectedRoute'
-import CheckoutPage from './pages/CheckoutPage'
-import OrderConfirmationPage from './pages/OrderConfirmationPage'
 
+// Route-level code splitting: გვერდის კოდი იტვირთება მხოლოდ მაშინ, როცა მომხმარებელი მასზე გადადის
+const CatalogPage = lazy(() => import('./pages/CatalogPage'))
+const ProductPage = lazy(() => import('./pages/ProductPage'))
+const LoginPage = lazy(() => import('./pages/LoginPage'))
+const CartPage = lazy(() => import('./pages/CartPage'))
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
+const OrderConfirmationPage = lazy(() => import('./pages/OrderConfirmationPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 function App() {
   return (
     <Routes>
-      <Route element={ <BaseLayout/> }>
+      <Route element={<BaseLayout />}>
         <Route path='/products/:id' element={<ProductPage />} />
-        <Route path="/" element={<CatalogPage />} />
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route path='/' element={<CatalogPage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/cart' element={<CartPage />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
+          <Route path='/checkout' element={<CheckoutPage />} />
+          <Route path='/order-confirmation' element={<OrderConfirmationPage />} />
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path='*' element={<NotFoundPage />} />
       </Route>
     </Routes>
   )
