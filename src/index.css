@@ -1,3 +1,20 @@
 @import "tailwindcss";
 
-
+/* Dark mode: <html class="dark"> ჩართვისას ვცვლით Tailwind-ის ფერების ცვლადებს.
+   თეთრი და neutral-ის შკალა ერთმანეთს ენაცვლება (50 <-> 950, 100 <-> 900 ...),
+   ამიტომ ყველა არსებული კლასი (bg-white, text-neutral-900 ...) ავტომატურად ბნელდება. */
+.dark {
+  color-scheme: dark;
+  --color-white: oklch(14.5% 0 0);
+  --color-neutral-50: oklch(14.5% 0 0);
+  --color-neutral-100: oklch(20.5% 0 0);
+  --color-neutral-200: oklch(26.9% 0 0);
+  --color-neutral-300: oklch(37.1% 0 0);
+  --color-neutral-400: oklch(43.9% 0 0);
+  --color-neutral-500: oklch(55.6% 0 0);
+  --color-neutral-600: oklch(70.8% 0 0);
+  --color-neutral-700: oklch(87% 0 0);
+  --color-neutral-800: oklch(92.2% 0 0);
+  --color-neutral-900: oklch(97% 0 0);
+  --color-neutral-950: oklch(98.5% 0 0);
+}
