@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '../components/Button'
 import useCart from '../hooks/useCart'
@@ -7,10 +8,11 @@ import { discountedPrice, formatPrice } from '../utils/format'
 const CartPage = () => {
     const { items, removeItem, updateQuantity, clearCart } = useCart()
 
-    const handleClearCart = (): void => {
-        if (window.confirm('Clear the cart? This cannot be undone.')) {
-            clearCart()
-        }
+    const [isConfirmingClear, setIsConfirmingClear] = useState<boolean>(false)
+
+    const handleConfirmClear = (): void => {
+        clearCart()
+        setIsConfirmingClear(false)
     }
 
     if (items.length === 0) {
@@ -87,9 +89,21 @@ const CartPage = () => {
                 <p className='text-xl font-semibold'>Subtotal: {formatPrice(getCartSubtotal(items))}</p>
 
                 <div className='flex gap-3'>
-                    <Button variant='secondary' onClick={handleClearCart}>
-                        Clear cart
-                    </Button>
+                    {isConfirmingClear ? (
+                        <div role='alertdialog' aria-label='Confirm clearing the cart' className='flex items-center gap-3'>
+                            <span className='text-sm text-neutral-600'>Clear the cart?</span>
+                            <Button variant='secondary' onClick={handleConfirmClear}>
+                                Yes, clear
+                            </Button>
+                            <Button variant='secondary' onClick={() => setIsConfirmingClear(false)}>
+                                Cancel
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button variant='secondary' onClick={() => setIsConfirmingClear(true)}>
+                            Clear cart
+                        </Button>
+                    )}
                     <Link
                         to='/checkout'
                         className='rounded-xl bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition duration-200 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900'
