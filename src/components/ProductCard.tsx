@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     }
 
     return (
-        <article className='flex flex-col overflow-hidden rounded-xl border border-neutral-200 transition duration-200 hover:border-neutral-900'>
+        <article className='group/card flex flex-col overflow-hidden rounded-xl border border-neutral-200 transition duration-300 ease-out hover:-translate-y-1 hover:border-neutral-900 hover:opacity-100! hover:blur-none! hover:shadow-lg group-hover/grid:opacity-60 group-hover/grid:blur-[2px] motion-reduce:transition-none motion-reduce:hover:translate-y-0'>
             <Link
                 to={`/products/${product.id}`}
                 className='block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900'
@@ -30,7 +30,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     src={product.thumbnail}
                     alt={product.title}
                     loading='lazy'
-                    className='aspect-square w-full bg-neutral-100 object-cover'
+                    className='aspect-square w-full bg-neutral-100 object-cover transition duration-500 ease-out group-hover/card:scale-105 motion-reduce:transition-none motion-reduce:group-hover/card:scale-100'
                 />
             </Link>
 
