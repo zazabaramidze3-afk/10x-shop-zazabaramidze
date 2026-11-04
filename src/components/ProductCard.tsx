@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Button from './Button'
+import StockBadge from './StockBadge'
 import useCart from '../hooks/useCart'
 import type { Product } from '../types/product'
 import { discountedPrice, formatPrice } from '../utils/format'
@@ -43,9 +44,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     </span>
                 </div>
 
-                <p className='text-sm text-neutral-600'>
-                    {isOutOfStock ? 'Out of stock' : `${remainingStock} in stock`}
-                </p>
+                <StockBadge remainingStock={remainingStock} />
 
                 <Button className='mt-auto' onClick={handleAddToCart} disabled={isOutOfStock}>
                     {isOutOfStock ? 'Out of stock' : 'Add to cart'}
