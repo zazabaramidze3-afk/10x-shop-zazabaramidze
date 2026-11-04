@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchProducts } from '../api/products.api'
 import type { Product } from '../types/product'
-import ProductCard from '../components/ProductCard'
+import ProductGrid from '../components/ProductGrid'
 
 const CatalogPage = () => {
     const [products, setProducts] = useState<Product[]>([])
@@ -39,11 +39,7 @@ const CatalogPage = () => {
         <div className='space-y-6'>
             <h1 className='text-2xl font-semibold'>Catalog</h1>
 
-            <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-                {products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
+            <ProductGrid products={products} />
         </div>
     )
 }
