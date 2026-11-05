@@ -56,7 +56,7 @@ const LoginPage = () => {
                         type='text'
                         value={username}
                         onChange={handleUsernameChange}
-                        className='w-full rounded-xl border border-neutral-300 px-4 py-2.5 transition duration-200 focus:border-neutral-900 focus:outline-none'
+                        className='input-field'
                     />
                     {errors.username && <p className='text-sm text-red-600'>{errors.username}</p>}
                 </div>
@@ -70,7 +70,7 @@ const LoginPage = () => {
                         type='password'
                         value={password}
                         onChange={handlePasswordChange}
-                        className='w-full rounded-xl border border-neutral-300 px-4 py-2.5 transition duration-200 focus:border-neutral-900 focus:outline-none'
+                        className='input-field'
                     />
                     {errors.password && <p className='text-sm text-red-600'>{errors.password}</p>}
                 </div>
