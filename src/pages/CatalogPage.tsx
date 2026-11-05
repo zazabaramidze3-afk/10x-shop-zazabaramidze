@@ -53,7 +53,7 @@ const CatalogPage = () => {
                 onChange={handleQueryChange}
                 aria-label='Search products'
                 placeholder='Search products...'
-                className='w-full rounded-xl border border-neutral-300 px-4 py-2.5 transition duration-200 focus:border-neutral-900 focus:outline-none'
+                className='input-field'
             />
 
             { visibleProducts.length === 0 
