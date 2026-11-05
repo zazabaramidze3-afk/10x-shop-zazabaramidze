@@ -4,6 +4,7 @@ import { CartContext } from './CartContext'
 import { cartReducer } from './cartReducer'
 import type { CartContextValue } from './CartContext'
 import type { CartItem } from '../types/cart'
+import { isCartItem } from '../utils/guards'
 
 interface CartProviderProps {
     children: ReactNode
@@ -19,7 +20,7 @@ const loadCart = (): CartItem[] => {
         }
 
         const parsed: unknown = JSON.parse(saved)
-        return Array.isArray(parsed) ? (parsed as CartItem[]) : []
+        return Array.isArray(parsed) ? parsed.filter(isCartItem) : []
     } catch {
         return []
     }
