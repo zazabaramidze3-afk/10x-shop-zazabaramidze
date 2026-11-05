@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
 import { fetchProducts } from '../api/products.api'
 import type { Product } from '../types/product'
 import ProductGrid from '../components/ProductGrid'
 
 const CatalogPage = () => {
+    const [query, setQuery] = useState<string>('')
     const [products, setProducts] = useState<Product[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
+
+    const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
+        setQuery(event.target.value)
+    }
 
     useEffect(() => {
         const loadProducts = async (): Promise<void> => {
@@ -35,11 +40,26 @@ const CatalogPage = () => {
         return <p>No products found.</p>
     }
 
+    const normalizedQuery = query.trim().toLowerCase()
+    const visibleProducts = products.filter((product) => product.title.toLowerCase().includes(normalizedQuery))
+
+
     return (
         <div className='space-y-6'>
             <h1 className='text-2xl font-semibold'>Catalog</h1>
+            <input 
+                type='search'
+                value={query}
+                onChange={handleQueryChange}
+                aria-label='Search products'
+                placeholder='Search products...'
+                className='w-full rounded-xl border border-neutral-300 px-4 py-2.5 transition duration-200 focus:border-neutral-900 focus:outline-none'
+            />
 
-            <ProductGrid products={products} />
+            { visibleProducts.length === 0 
+                ? ( <p className='text-neutral-600'>No products match "{query}".</p>) 
+                : (<ProductGrid products={visibleProducts} /> )
+            }
         </div>
     )
 }
