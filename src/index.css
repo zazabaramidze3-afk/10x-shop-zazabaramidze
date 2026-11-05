@@ -18,3 +18,15 @@
   --color-neutral-900: oklch(97% 0 0);
   --color-neutral-950: oklch(98.5% 0 0);
 }
+
+@theme { 
+  --color-brand: oklch(55% 0.2 265);
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}

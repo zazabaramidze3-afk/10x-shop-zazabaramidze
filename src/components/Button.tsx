@@ -10,14 +10,14 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const baseStyles = [
   'rounded-xl px-5 py-2.5 text-sm font-medium',
   'transition duration-200',
-  'focus-visible:outline-2 focus-visible:outline-offset-2',
+  'focus-ring',
   'disabled:cursor-not-allowed disabled:opacity-50',
 ].join(' ')
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-neutral-900 text-white hover:bg-neutral-700 focus-visible:outline-neutral-900',
+  primary: 'bg-neutral-900 text-white hover:bg-neutral-700',
   secondary:
-    'border border-neutral-300 bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus-visible:outline-neutral-400',
+    'border border-neutral-300 bg-neutral-100 text-neutral-900 hover:bg-neutral-200',
 }
 
 const Button = ({ variant = 'primary', className = '', type = 'button', ...props }: ButtonProps) => {
