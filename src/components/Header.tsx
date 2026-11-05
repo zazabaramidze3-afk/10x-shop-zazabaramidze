@@ -7,7 +7,7 @@ import useTheme from '../hooks/useTheme'
 import { getCartCount } from '../utils/cart'
 
 const linkStyles =
-  'whitespace-nowrap text-sm font-medium transition duration-200 hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-900'
+  'whitespace-nowrap text-sm font-medium transition duration-200 hover:opacity-70 focus-ring'
 
 // NavLink-ს className-ში isActive გადმოეცემა: მიმდინარე გვერდის ბმული გამოიკვეთება
 const getNavLinkStyles = ({ isActive }: { isActive: boolean }): string =>
@@ -60,7 +60,7 @@ const Header = () => {
           <path d='M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12' />
         </svg>
         {cartCount > 0 && (
-          <span className='absolute -right-2 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-neutral-900 px-1 text-xs font-medium text-white'>
+          <span className='absolute -right-2 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-xs font-medium text-white'>
             {cartCount}
           </span>
         )}
@@ -155,7 +155,7 @@ const Header = () => {
         <Link
           to='/'
           onClick={closeMenu}
-          className='whitespace-nowrap text-lg font-semibold transition duration-200 hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-900'
+          className='whitespace-nowrap text-lg font-semibold transition duration-200 hover:opacity-70 focus-ring'
         >
           10X Shop
         </Link>
