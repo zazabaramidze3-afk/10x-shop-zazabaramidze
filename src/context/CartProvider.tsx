@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import type { ReactNode } from 'react'
 import { CartContext } from './CartContext'
+import { cartReducer } from './cartReducer'
 import type { CartContextValue } from './CartContext'
 import type { CartItem } from '../types/cart'
 
@@ -25,52 +26,27 @@ const loadCart = (): CartItem[] => {
 }
 
 const CartProvider = ({ children }: CartProviderProps) => {
-    const [items, setItems] = useState<CartItem[]>(loadCart)
-    
+    // reducer იღებს მიმდინარე items-ს და action-ს, საწყისი მნიშვნელობა localStorage-იდან მოდის
+    const [items, dispatch] = useReducer(cartReducer, undefined, loadCart)
+
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
     }, [items])
-    
+
     const addItem = (newItem: CartItem): void => {
-        setItems((prevItems) => {
-            const existing = prevItems.find((item) => item.productId === newItem.productId)
-
-            // ახალი პროდუქტია: ვამატებთ ახალ ხაზს
-            if (!existing) {
-                return [...prevItems, newItem]
-            }
-
-            // უკვე არსებობს: ვზრდით რაოდენობას, მაგრამ stock-ს არ ვცდებით
-            return prevItems.map((item) =>
-                item.productId === newItem.productId
-                    ? { ...item, quantity: Math.min(item.quantity + newItem.quantity, item.stock) }
-                    : item
-            )
-        })
+        dispatch({ type: 'add', item: newItem })
     }
 
     const removeItem = (productId: number): void => {
-        setItems((prevItems) => prevItems.filter((item) => item.productId !== productId))
+        dispatch({ type: 'remove', productId })
     }
 
     const updateQuantity = (productId: number, quantity: number): void => {
-        // 1-ზე ნაკლები რაოდენობა = პროდუქტის წაშლა
-        if (quantity < 1) {
-            removeItem(productId)
-            return
-        }
-
-        setItems((prevItems) =>
-            prevItems.map((item) =>
-                item.productId === productId
-                    ? { ...item, quantity: Math.min(quantity, item.stock) }
-                    : item
-            )
-        )
+        dispatch({ type: 'setQuantity', productId, quantity })
     }
 
     const clearCart = (): void => {
-        setItems([])
+        dispatch({ type: 'clear' })
     }
 
     const value: CartContextValue = { items, addItem, removeItem, updateQuantity, clearCart }
