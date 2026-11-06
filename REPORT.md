@@ -1,6 +1,6 @@
 # Project Report: 10X Shop
 
-**Live:** https://10x-shop-zazabaramidze.vercel.app · **Repo:** https://github.com/zazabaramidze3-afk/10x-shop-zazabaramidze
+**Live:** https://10x-shop-zazabaramidze.vercel.app · **Repo:** https://github.com/zazabaramidze3-afk/10x-shop-zazabaramidze · **Demo video (3:30):** https://youtu.be/0Y4x5HOkPu8
 
 ## 1. Planned vs delivered
 
@@ -39,12 +39,13 @@
 | `@theme` tokens and `@utility` classes | ✅ |
 | Cross-browser check | ✅ Chrome, Edge, Arc (Chromium), Firefox (Gecko); Safari not tested |
 | UI polish: image gallery, side drawer menu, compact cards, "Back to cart" link | ✅ |
-| Category filter, pagination, URL state | ❌ not done |
+| Category filter (chips, works together with search and sort) | ✅ |
+| Pagination, URL state | ❌ not done |
 | `ApiClient` / OOP classes | ❌ not done |
 | Orders, Profile | ❌ not done |
 | Reviews, Related products, promo code (BONUS) | ❌ not done |
 
-Why not: with about two weeks and a first release of CORE on 2 November, I first finished CORE, deployed and documented it, and then added FULL items in the order in which I could understand and explain each one. Pagination, categories, Orders, Profile and the `ApiClient` class were left out because there was not enough time to build them and still be able to explain them at the defence.
+Why not: with about two weeks and a first release of CORE on 2 November, I first finished CORE, deployed and documented it, and then added FULL items in the order in which I could understand and explain each one. Pagination, URL state, Orders, Profile and the `ApiClient` class were left out because there was not enough time to build them and still be able to explain them at the defence.
 
 Two decisions worth knowing: `ProductPage` was **not** migrated to `useFetch`, because it must distinguish a 404 (show the 404 page) from other errors and reject non-numeric IDs before fetching, which the simple hook cannot do. The checkout form was not moved to Formik either, to keep the change small and leave one clearly explained example of Formik + Yup (the login form).
 
@@ -53,7 +54,7 @@ Two decisions worth knowing: `ProductPage` was **not** migrated to `useFetch`, b
 | Metric | Value |
 |---|---|
 | Commits | 108 (Conventional Commits) on 11 different days (25 Oct – 6 Nov) |
-| Pull requests | 15 merged (each with What / Why / How to test; most with `Closes #…`) |
+| Pull requests | 17 closed (merged), each with What / Why / How to test; most with `Closes #…` |
 | Pages | 7 (Catalog, Product, Cart, Login, Checkout, Order confirmation, 404) |
 | TypeScript | `strict`, `no-explicit-any`; `npm run typecheck` and `npm run lint` pass |
 | Bugs documented | 5 (see DEBUG-LOG.md) |
