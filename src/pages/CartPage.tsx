@@ -88,10 +88,10 @@ const CartPage = () => {
             <div className='flex flex-col gap-4 border-t border-neutral-200 pt-6 sm:flex-row sm:items-center sm:justify-between'>
                 <p className='text-xl font-semibold'>Subtotal: {formatPrice(getCartSubtotal(items))}</p>
 
-                <div className='flex gap-3'>
+                <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
                     {isConfirmingClear ? (
-                        <div role='alertdialog' aria-label='Confirm clearing the cart' className='flex items-center gap-3'>
-                            <span className='text-sm text-neutral-600'>Clear the cart?</span>
+                        <div role='alertdialog' aria-label='Confirm clearing the cart' className='flex flex-wrap items-center gap-3'>
+                            <span className='w-full text-sm text-neutral-600 sm:w-auto'>Clear the cart?</span>
                             <Button variant='secondary' onClick={handleConfirmClear}>
                                 Yes, clear
                             </Button>
@@ -106,7 +106,7 @@ const CartPage = () => {
                     )}
                     <Link
                         to='/checkout'
-                        className='rounded-xl bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition duration-200 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900'
+                        className='rounded-xl bg-neutral-900 px-5 py-2.5 text-center text-sm font-medium text-white transition duration-200 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900'
                     >
                         Proceed to checkout
                     </Link>
