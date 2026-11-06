@@ -21,6 +21,7 @@ const ProductPage = () => {
     const [error, setError] = useState<string | null>(null)
     const [quantity, setQuantity] = useState<number>(1)
     const [isAdded, setIsAdded] = useState<boolean>(false)
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0)
 
     useEffect(() => {
         // /products/abc ტიპის არასწორ id-ს API-ს აღარ ვეკითხებით
@@ -62,6 +63,7 @@ const ProductPage = () => {
         return <NotFoundPage />
     }
 
+    const gallery: string[] = product.images.length > 0 ? product.images : [product.thumbnail]
     const finalPrice = discountedPrice(product.price, product.discountPercentage)
     const remainingStock = product.stock - getQuantityInCart(items, product.id)
     const isOutOfStock = remainingStock < 1
@@ -93,11 +95,33 @@ const ProductPage = () => {
             </Link>
 
             <div className='grid gap-8 md:grid-cols-2'>
-                <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    className='aspect-square w-full rounded-xl bg-neutral-100 object-cover'
-                />
+                <div className='space-y-3'>
+                    <img
+                        src={gallery[selectedImageIndex] ?? product.thumbnail}
+                        alt={product.title}
+                        className='aspect-square w-full rounded-xl bg-neutral-100 object-cover'
+                    />
+                    {gallery.length > 1 && (
+                        <div className='flex gap-2 overflow-x-auto'>
+                            {gallery.map((image, index) => (
+                                <button
+                                    key={image}
+                                    type='button'
+                                    onClick={() => setSelectedImageIndex(index)}
+                                    aria-label={`Show image ${index + 1}`}
+                                    aria-pressed={index === selectedImageIndex}
+                                    className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 bg-neutral-100 transition duration-200 ${
+                                        index === selectedImageIndex
+                                            ? 'border-neutral-900'
+                                            : 'border-transparent opacity-60 hover:opacity-100'
+                                    }`}
+                                >
+                                    <img src={image} alt='' className='h-full w-full object-cover' />
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
                 <div className='space-y-4'>
                     <p className='text-sm uppercase tracking-wide text-neutral-500'>{product.category}</p>
