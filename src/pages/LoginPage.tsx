@@ -1,79 +1,56 @@
-import { useState } from 'react';
-import type { ChangeEvent, SubmitEvent } from 'react';
-import Button from '../components/Button';
-import type { FormErrors } from '../types/form'
-import type { LoginFormValues } from '../types/user'
-import { validateLogin } from '../utils/validation'
+import { useFormik } from 'formik'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import useAuth  from '../hooks/useAuth'
+import Button from '../components/Button'
+import FormField from '../components/FormField'
+import useAuth from '../hooks/useAuth'
+import { loginSchema } from '../schemas/loginSchema'
+import type { LoginFormValues } from '../types/user'
 
 interface LoginLocationState {
     from?: { pathname: string }
 }
 
 const LoginPage = () => {
-    const [username, setUsername] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const [errors, setErrors] = useState<FormErrors<LoginFormValues>>({})
     const { login } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
     const redirectTo = (location.state as LoginLocationState | null)?.from?.pathname ?? '/'
 
-    const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        setUsername(event.target.value)
-    }
+    const formik = useFormik<LoginFormValues>({
+        initialValues: { username: '', password: '' },
+        validationSchema: loginSchema,
+        onSubmit: (values) => {
+            login(values.username)
+            navigate(redirectTo, { replace: true })
+        },
+    })
 
-    const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        setPassword(event.target.value)
-    }
-
-    const handleSubmit = (event: SubmitEvent<HTMLFormElement>): void => {
-        event.preventDefault()
-
-        const validationErrors = validateLogin({ username, password })
-        setErrors(validationErrors)
-
-        if (Object.keys(validationErrors).length > 0) {
-            return
-        }
-
-        login(username)
-        navigate(redirectTo, { replace: true })
-    }
-    
     return (
         <div className='mx-auto max-w-sm space-y-6'>
             <h1 className='text-2xl font-semibold'>Login</h1>
 
-            <form onSubmit={handleSubmit} className='space-y-4'>
-                <div className='space-y-1'>
-                    <label htmlFor='username' className='text-sm font-medium'>
-                        Username
-                    </label>
-                    <input
-                        id='username'
-                        type='text'
-                        value={username}
-                        onChange={handleUsernameChange}
-                        className='input-field'
-                    />
-                    {errors.username && <p className='text-sm text-red-600'>{errors.username}</p>}
-                </div>
+            <form onSubmit={formik.handleSubmit} className='space-y-4'>
+                <FormField
+                    id='username'
+                    name='username'
+                    type='text'
+                    label='Username'
+                    value={formik.values.username}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.username ? formik.errors.username : undefined}
+                />
 
-                <div className='space-y-1'>
-                    <label htmlFor='password' className='text-sm font-medium'>
-                        Password
-                    </label>
-                    <input
-                        id='password'
-                        type='password'
-                        value={password}
-                        onChange={handlePasswordChange}
-                        className='input-field'
-                    />
-                    {errors.password && <p className='text-sm text-red-600'>{errors.password}</p>}
-                </div>
+                <FormField
+                    id='password'
+                    name='password'
+                    type='password'
+                    label='Password'
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.password ? formik.errors.password : undefined}
+                />
 
                 <Button type='submit' className='w-full'>
                     Login
