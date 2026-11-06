@@ -30,15 +30,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     src={product.thumbnail}
                     alt={product.title}
                     loading='lazy'
-                    className='aspect-square w-full bg-neutral-100 object-cover transition duration-500 ease-out group-hover/card:scale-105 motion-reduce:transition-none motion-reduce:group-hover/card:scale-100'
+                    className='aspect-[4/3] w-full bg-neutral-100 object-cover transition duration-500 ease-out group-hover/card:scale-105 motion-reduce:transition-none motion-reduce:group-hover/card:scale-100'
                 />
             </Link>
 
-            <div className='flex flex-1 flex-col gap-2 p-4'>
-                <h2 className='font-medium'>{product.title}</h2>
+            <div className='flex flex-1 flex-col gap-1.5 p-3'>
+                <h2 className='line-clamp-2 text-sm font-medium'>{product.title}</h2>
 
                 <div className='flex items-baseline gap-2'>
-                    <span className='text-lg font-semibold'>{formatPrice(finalPrice)}</span>
+                    <span className='font-semibold'>{formatPrice(finalPrice)}</span>
                     <span className='text-sm text-neutral-500 line-through'>
                         {formatPrice(product.price)}
                     </span>
