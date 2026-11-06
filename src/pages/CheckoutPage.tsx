@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ChangeEvent, SubmitEvent } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import FormField from '../components/FormField'
 import useCart from '../hooks/useCart'
@@ -60,6 +60,12 @@ const CheckoutPage = () => {
 
     return (
         <div className='mx-auto max-w-lg space-y-6'>
+            <Link
+                to='/cart'
+                className='inline-block text-sm font-medium transition duration-200 hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-900'
+            >
+                ← Back to cart
+            </Link>
             <h1 className='text-2xl font-semibold'>Checkout</h1>
 
             <section aria-label='Order summary' className='space-y-3 rounded-xl border border-neutral-200 p-4'>
