@@ -10,41 +10,49 @@
 
 **CORE (all implemented)**
 
-- Catalog: products loaded from DummyJSON with loading, error and empty states, shown in a responsive grid (1 / 2 / 3 columns).
-- Product page (`/products/:id`): image, description, discounted price, rating, remaining stock, quantity selector and Add to cart. Invalid or unknown IDs show the 404 page.
-- Cart: change quantity (limited by stock), remove an item, clear the cart, subtotal. The cart is shared through React Context (Header icon badge and Cart page stay in sync) and persisted in `localStorage` (`shop_cart`).
-- Login (local simulation): controlled form with validation, state in `AuthContext`, username persisted in `localStorage` (`shop_user`).
-- Checkout: guests are redirected to `/login` and returned to `/checkout` after login. Controlled form (Full name, Email, Address, City) with validation, order summary, local order confirmation ("Thank you!") and cart reset.
-- Responsive layout (checked at 375px and on desktop), burger menu on small screens, hover / focus / disabled states, semantic HTML and accessible labels.
+- Catalog: products loaded from DummyJSON with loading, error and empty states, shown in a responsive grid (1 / 2 / 3 / 4 columns by breakpoint).
+- Product page (`/products/:id`): image gallery with thumbnails, description, discounted price, rating, remaining stock, quantity selector and Add to cart. Invalid or unknown IDs show the 404 page.
+- Cart: change quantity (limited by stock), remove an item, clear the cart (with confirmation), subtotal. The cart is shared through React Context (Header icon badge and Cart page stay in sync) and persisted in `localStorage` (`shop_cart`).
+- Login (local simulation): form with Formik + Yup validation, state in `AuthContext`, username persisted in `localStorage` (`shop_user`).
+- Checkout: guests are redirected to `/login` and returned to `/checkout` after login. Controlled form (Full name, Email, Address, City) with hand-written validation, order summary, local order confirmation ("Thank you!"), cart reset and a "Back to cart" link.
+- Responsive layout (checked at 360px, 375px and on desktop), side drawer menu on small screens, hover / focus / disabled states, semantic HTML and accessible labels.
 - Error Boundary and a 404 page.
 
 **FULL (implemented extras)**
 
+- Search by product title and sorting (default, price ascending / descending, rating) in the catalog. Sorting uses a `SortOption` union type and a pure `sortProducts` function that does not mutate the original array.
+- Cart state managed with `useReducer`.
+- TypeScript: generics (`request<T>` in the API layer and the `useFetch<T>` hook), type guards (`isSortOption`, `isCartItem`) and discriminated unions.
+- Custom hooks: `useFetch`, `useAuth`, `useCart`, `useTheme`.
+- Formik + Yup on the login form (`src/schemas/loginSchema.ts`).
+- Tailwind v4 design tokens with `@theme` and custom `@utility` classes (`input-field`, `catalog-control`).
 - Route-level code splitting with `React.lazy` and `Suspense`.
 - Dark / light theme (Tailwind v4 colour variables), saved in `localStorage` (`shop_theme`).
 - Lighthouse before / after reports in [`docs/lighthouse`](docs/lighthouse).
+- Cross-browser check: Chrome, Edge, Arc (Chromium) and Firefox (Gecko), on desktop and in responsive mode. Safari was not tested.
 
-Not implemented (FULL): search, filtering, sorting, pagination, Orders, Profile, Reviews, Related products, promo codes, Formik + Yup.
+**Not implemented (FULL / BONUS):** category filter, pagination and URL state, `ApiClient` / OOP classes, Orders, Profile, Reviews, Related products, promo codes. The checkout form still uses hand-written validation instead of Formik. `ProductPage` still has its own `useEffect` instead of `useFetch`, because it must tell a 404 apart from other errors and reject non-numeric IDs before fetching.
 
 ## Tech Stack
 
-React 19 · TypeScript (`strict`, no `any`) · Vite · React Router 7 · Tailwind CSS v4 · ESLint (typescript-eslint, react-hooks) · DummyJSON API · Vercel.
+React 19 · TypeScript (`strict`, no `any`) · Vite · React Router 7 · Tailwind CSS v4 · Formik + Yup · ESLint (typescript-eslint, react-hooks) · DummyJSON API · Vercel.
 
 ## Architecture
 
 ```
 src/
-  api/          ApiError, products.api.ts (fetch wrapper for DummyJSON)
-  types/        Product, CartItem, AuthUser, ShippingInfo, OrderSummary, FormErrors
-  utils/        formatPrice, discountedPrice, cart totals, form validation
-  context/      AuthContext + AuthProvider, CartContext + CartProvider
-  hooks/        useAuth, useCart, useTheme
-  components/   Header, ProductCard, Button, FormField, ProtectedRoute, ErrorBoundary, ScrollToTop
+  api/          ApiError, products.api.ts (generic fetch wrapper for DummyJSON)
+  types/        Product, SortOption, CartItem, AuthUser, ShippingInfo, OrderSummary, FormErrors
+  schemas/      loginSchema (Yup)
+  utils/        formatPrice, discountedPrice, cart totals, sortProducts, type guards, form validation
+  context/      AuthContext + AuthProvider, CartContext + CartProvider (useReducer)
+  hooks/        useAuth, useCart, useTheme, useFetch<T>
+  components/   Header, ProductCard, ProductGrid, Button, FormField, StockBadge, ProtectedRoute, ErrorBoundary, ScrollToTop
   layouts/      BaseLayout (Header + Outlet + Footer)
   pages/        Catalog, Product, Cart, Login, Checkout, OrderConfirmation, NotFound
 ```
 
-Data flow: a user action (for example *Add to cart*) calls a function exposed by a Context provider, the provider updates its state immutably with `useState`, and React re-renders every component that reads that context (Header badge, Cart page, product stock). Data from the API is loaded in `useEffect` and rendered through explicit loading, error, empty and success states. Pages are loaded lazily, and `/checkout` and `/order-confirmation` are wrapped in `ProtectedRoute`.
+Data flow: a user action (for example *Add to cart*) calls a function exposed by a Context provider, the provider updates its state immutably, and React re-renders every component that reads that context (Header badge, Cart page, product stock). The catalog loads products with the generic `useFetch` hook, which returns `{ data, isLoading, error }`, and then filters and sorts them in the page. Pages are loaded lazily, and `/checkout` and `/order-confirmation` are wrapped in `ProtectedRoute`.
 
 ## How to Run
 
@@ -88,7 +96,7 @@ Deployed on Vercel. `vercel.json` rewrites every path to `index.html`, so direct
 ## Limitations
 
 - Login and checkout are simulations; credentials are not verified and orders are not stored.
-- Only the first 12 products are shown (pagination is a FULL feature).
+- Only the first 12 products are loaded (pagination and category filter are not implemented), so search and sorting work on those 12 products.
 - The app has no automated tests.
 
 ## Credits
