@@ -2,6 +2,8 @@
 
 **Live demo:** https://10x-shop-zazabaramidze.vercel.app
 
+**Demo video (3:30):** https://youtu.be/0Y4x5HOkPu8
+
 ## About
 
 10X Shop is a single-page online store built with React, TypeScript and Tailwind CSS. Products come from the public [DummyJSON](https://dummyjson.com) API. Login and checkout are local simulations: there is no real authentication, no backend and no payment.
@@ -20,7 +22,7 @@
 
 **FULL (implemented extras)**
 
-- Search by product title and sorting (default, price ascending / descending, rating) in the catalog. Sorting uses a `SortOption` union type and a pure `sortProducts` function that does not mutate the original array.
+- Search by product title, category filter (chips built from the loaded products, long lists collapse behind a "More" button) and sorting (default, price ascending / descending, rating) in the catalog. All three work together. Sorting uses a `SortOption` union type and a pure `sortProducts` function that does not mutate the original array.
 - Cart state managed with `useReducer`.
 - TypeScript: generics (`request<T>` in the API layer and the `useFetch<T>` hook), type guards (`isSortOption`, `isCartItem`) and discriminated unions.
 - Custom hooks: `useFetch`, `useAuth`, `useCart`, `useTheme`.
@@ -31,7 +33,7 @@
 - Lighthouse before / after reports in [`docs/lighthouse`](docs/lighthouse).
 - Cross-browser check: Chrome, Edge, Arc (Chromium) and Firefox (Gecko), on desktop and in responsive mode. Safari was not tested.
 
-**Not implemented (FULL / BONUS):** category filter, pagination and URL state, `ApiClient` / OOP classes, Orders, Profile, Reviews, Related products, promo codes. The checkout form still uses hand-written validation instead of Formik. `ProductPage` still has its own `useEffect` instead of `useFetch`, because it must tell a 404 apart from other errors and reject non-numeric IDs before fetching.
+**Not implemented (FULL / BONUS):** pagination and URL state, `ApiClient` / OOP classes, Orders, Profile, Reviews, Related products, promo codes. The checkout form still uses hand-written validation instead of Formik. `ProductPage` still has its own `useEffect` instead of `useFetch`, because it must tell a 404 apart from other errors and reject non-numeric IDs before fetching.
 
 ## Tech Stack
 
@@ -96,7 +98,7 @@ Deployed on Vercel. `vercel.json` rewrites every path to `index.html`, so direct
 ## Limitations
 
 - Login and checkout are simulations; credentials are not verified and orders are not stored.
-- Only the first 12 products are loaded (pagination and category filter are not implemented), so search and sorting work on those 12 products.
+- Only the first 100 products of the API are loaded (pagination is not implemented), so search, category filter and sorting work on those 100 products.
 - The app has no automated tests.
 
 ## Credits
