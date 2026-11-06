@@ -13,9 +13,14 @@ const sortChoices: ReadonlyArray<{ value: SortOption; label: string }> = [
     { value: 'rating-desc', label: 'Top rated' },
 ]
 
+const ALL_CATEGORIES = 'all'
+const COLLAPSED_CATEGORY_COUNT = 7
+
 const CatalogPage = () => {
     const [sortOption, setSortOption] = useState<SortOption>('default')
     const [query, setQuery] = useState<string>('')
+    const [selectedCategory, setSelectedCategory] = useState<string>(ALL_CATEGORIES)
+    const [showAllCategories, setShowAllCategories] = useState<boolean>(false)
     const { data, isLoading, error } = useFetch(fetchProducts)
     const products = data?.products ?? []
 
@@ -38,7 +43,17 @@ const CatalogPage = () => {
 
    
     const normalizedQuery = query.trim().toLowerCase()
-    const filteredProducts = products.filter((product) => product.title.toLowerCase().includes(normalizedQuery))
+    const categories = [ALL_CATEGORIES, ...Array.from(new Set(products.map((product) => product.category)))]
+    const collapsedCategories = categories.slice(0, COLLAPSED_CATEGORY_COUNT)
+    if (!collapsedCategories.includes(selectedCategory)) {
+        collapsedCategories.push(selectedCategory)
+    }
+    const visibleCategories = showAllCategories ? categories : collapsedCategories
+    const filteredProducts = products.filter(
+        (product) =>
+            (selectedCategory === ALL_CATEGORIES || product.category === selectedCategory) &&
+            product.title.toLowerCase().includes(normalizedQuery),
+    )
     const visibleProducts = sortProducts(filteredProducts, sortOption)
 
     return (
@@ -68,6 +83,33 @@ const CatalogPage = () => {
                         className='catalog-control w-full pl-10'
                     />
                 </div>
+                <div className='flex flex-wrap items-center gap-2' role='group' aria-label='Filter by category'>
+                    {visibleCategories.map((category) => (
+                        <button
+                            key={category}
+                            type='button'
+                            onClick={() => setSelectedCategory(category)}
+                            aria-pressed={selectedCategory === category}
+                            className={`rounded-full px-4 py-1.5 text-sm capitalize transition duration-200 ${
+                                selectedCategory === category
+                                    ? 'bg-neutral-900 text-white'
+                                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                            }`}
+                        >
+                            {category.replace(/-/g, ' ')}
+                        </button>
+                    ))}
+                    {categories.length > COLLAPSED_CATEGORY_COUNT + 1 && (
+                        <button
+                            type='button'
+                            onClick={() => setShowAllCategories((previous) => !previous)}
+                            aria-expanded={showAllCategories}
+                            className='rounded-full px-3 py-1.5 text-sm font-medium underline underline-offset-4 transition duration-200 hover:opacity-70'
+                        >
+                            {showAllCategories ? 'Show less' : 'More'}
+                        </button>
+                    )}
+                </div>
                 <div className='flex flex-wrap items-center gap-2' role='group' aria-label='Sort products'>
                     {sortChoices.map((choice) => (
                         <button
@@ -88,7 +130,7 @@ const CatalogPage = () => {
             </div>
 
             { visibleProducts.length === 0 
-                ? ( <p className='text-neutral-600'>No products match "{query}".</p>) 
+                ? ( <p className='text-neutral-600'>No products match your filters.</p>) 
                 : (<ProductGrid products={visibleProducts} /> )
             }
         </div>
