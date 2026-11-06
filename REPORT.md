@@ -54,7 +54,7 @@ Two decisions worth knowing: `ProductPage` was **not** migrated to `useFetch`, b
 | Metric | Value |
 |---|---|
 | Commits | 108 (Conventional Commits) on 11 different days (25 Oct – 6 Nov) |
-| Pull requests | 15 merged (each with What / Why / How to test; most with `Closes #…`) |
+| Pull requests | 17 closed (merged), each with What / Why / How to test; most with `Closes #…` |
 | Pages | 7 (Catalog, Product, Cart, Login, Checkout, Order confirmation, 404) |
 | TypeScript | `strict`, `no-explicit-any`; `npm run typecheck` and `npm run lint` pass |
 | Bugs documented | 5 (see DEBUG-LOG.md) |
