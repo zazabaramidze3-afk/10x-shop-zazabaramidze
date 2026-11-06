@@ -33,4 +33,8 @@
 
 @utility input-field {
   @apply w-full rounded-xl border border-neutral-300 px-4 py-2.5 transition duration-200 focus:border-neutral-900 focus:outline-none;
+  & option {
+    background-color: var(--color-white);
+    color: var(--color-neutral-900);
+  }
 }
