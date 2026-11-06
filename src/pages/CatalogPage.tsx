@@ -1,17 +1,17 @@
-import { useEffect, useState, type ChangeEvent } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import { fetchProducts } from '../api/products.api'
-import type { Product, SortOption } from '../types/product'
+import type { SortOption } from '../types/product'
 import ProductGrid from '../components/ProductGrid'
 import { isSortOption } from '../utils/guards'
 import { sortProducts } from '../utils/sortProducts'
+import { useFetch } from '../hooks/useFetch'
 
 
 const CatalogPage = () => {
     const [sortOption, setSortOption] = useState<SortOption>('default')
     const [query, setQuery] = useState<string>('')
-    const [products, setProducts] = useState<Product[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
+    const { data, isLoading, error } = useFetch(fetchProducts)
+    const products = data?.products ?? []
 
     const handleSortChange = (event: ChangeEvent<HTMLSelectElement>): void => {
 
@@ -25,20 +25,6 @@ const CatalogPage = () => {
         setQuery(event.target.value)
     }
 
-    useEffect(() => {
-        const loadProducts = async (): Promise<void> => {
-            try {
-                const data = await fetchProducts()
-                setProducts(data.products)
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Something went wrong')
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        void loadProducts()
-    }, [])
 
     if (isLoading) {
         return <p>Loading products...</p>
