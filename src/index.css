@@ -38,3 +38,10 @@
     color: var(--color-neutral-900);
   }
 }
+@utility catalog-control {
+  @apply rounded-full border border-transparent bg-neutral-100 px-4 py-2 text-sm transition duration-200 placeholder:text-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none;
+  & option {
+    background-color: var(--color-white);
+    color: var(--color-neutral-900);
+  }
+}
