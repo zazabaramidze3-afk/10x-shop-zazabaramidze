@@ -18,3 +18,6 @@ export interface ProductsResponse {
     skip: number
     limit: number
 }
+
+
+export type SortOption = 'default' | 'price-asc' | 'price-desc' | 'rating-desc'

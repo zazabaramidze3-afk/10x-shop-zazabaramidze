@@ -1,13 +1,25 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { fetchProducts } from '../api/products.api'
-import type { Product } from '../types/product'
+import type { Product, SortOption } from '../types/product'
 import ProductGrid from '../components/ProductGrid'
+import { isSortOption } from '../utils/guards'
+import { sortProducts } from '../utils/sortProducts'
+
 
 const CatalogPage = () => {
+    const [sortOption, setSortOption] = useState<SortOption>('default')
     const [query, setQuery] = useState<string>('')
     const [products, setProducts] = useState<Product[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
+
+    const handleSortChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+
+        if (isSortOption(event.target.value)) {
+            setSortOption(event.target.value)
+        }
+    }
+    
 
     const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setQuery(event.target.value)
@@ -40,13 +52,25 @@ const CatalogPage = () => {
         return <p>No products found.</p>
     }
 
+   
     const normalizedQuery = query.trim().toLowerCase()
-    const visibleProducts = products.filter((product) => product.title.toLowerCase().includes(normalizedQuery))
-
+    const filteredProducts = products.filter((product) => product.title.toLowerCase().includes(normalizedQuery))
+    const visibleProducts = sortProducts(filteredProducts, sortOption)
 
     return (
         <div className='space-y-6'>
             <h1 className='text-2xl font-semibold'>Catalog</h1>
+            <select
+                value={sortOption}
+                onChange={handleSortChange}
+                aria-label='Sort products'
+                className='input-field'
+            >
+                <option value='default'>Default</option>
+                <option value='price-asc'>Price: low to high</option>
+                <option value='price-desc'>Price: high to low</option>
+                <option value='rating-desc'>Rating: high to low</option>
+            </select>
             <input 
                 type='search'
                 value={query}
