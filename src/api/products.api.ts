@@ -13,7 +13,7 @@ async function request<T>(path: string): Promise<T> {
     return (await response.json()) as T
 }
 
-export function fetchProducts(limit = 12, skip = 0): Promise<ProductsResponse> {
+export function fetchProducts(limit = 100, skip = 0): Promise<ProductsResponse> {
     return request<ProductsResponse>(`/products?limit=${limit}&skip=${skip}`)
 }
 
